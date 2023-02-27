@@ -1,5 +1,5 @@
 <template>
-    <div class="col">
+    <div class="col-6">
         <div class=" fs-5 bg-info text-center rounded p-2">
             This Component has a script that connect to signaling's server
 
@@ -54,10 +54,7 @@ function makeConnection(key: string) {
 function generateKey() {
 
 }
-const ws = new WebSocket("ws://localhost:8080")
-ws.addEventListener("open", () => {
-    console.log("i have a connection bro")
-})
+
 
 </script>
 
