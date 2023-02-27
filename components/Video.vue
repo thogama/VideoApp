@@ -24,14 +24,16 @@
 </template>
 
 <script lang="ts" setup>
-
-// const remoteVideo: HTMLVideoElement = document.querySelector('video#remote')!;
+import firebase from 'firebase/compat/app'; //v9
+import 'firebase/compat/firestore'; //v9
+const remoteVideo: HTMLVideoElement = document.querySelector('video#remote')!;
 
 // Prefer camera resolution nearest to 1280x720.
 const constraints = {
     audio: { echoCancellation: true },
     video: { width: 1280, height: 720 }
 };
+const firestore = firebase.firestore();
 
 const servers = {
     iceServers: [
@@ -64,7 +66,27 @@ pc.ontrack = (event) => {
         remoteStream.addTrack(track);
     });
 };
-// remoteVideo.srcObject = remoteStream;
+remoteVideo.srcObject = remoteStream;
+
+const callDoc = firestore.collection('calls').doc();
+const offerCandidates = callDoc.collection('offerCandidates');
+const answerCandidates = callDoc.collection('answerCandidates');
+const callInput = 220000
+callInput.value = callDoc.id;
+
+// Get candidates for caller, save to db
+pc.onicecandidate = (event) => {
+    event.candidate && offerCandidates.add(event.candidate.toJSON());
+};
+
+// Create offer
+const offerDescription = await pc.createOffer();
+await pc.setLocalDescription(offerDescription);
+
+const offer = {
+    sdp: offerDescription.sdp,
+    type: offerDescription.type,
+}
 </script>
 
 <style lang="scss" scoped></style>

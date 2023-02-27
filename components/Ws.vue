@@ -1,5 +1,5 @@
 <template>
-    <div class="col-6">
+    <div class="col-4">
         <div class=" fs-5 bg-info text-center rounded p-2">
             This Component has a script that connect to signaling's server
 
